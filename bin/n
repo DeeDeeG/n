@@ -402,7 +402,7 @@ tarball_url() {
 
   [ -n "$ARCH" ] && arch="$ARCH"
 
-  echo "${MIRROR[$DEFAULT]}v${version}/${BIN_NAME[$DEFAULT]}-v${version}-${os}-${arch}.tar.gz"
+  echo "${MIRROR[$DEFAULT]}v${version}/${BIN_NAME[$DEFAULT]}-v${version}-${os}-${arch}.tar.xz"
 
 }
 
@@ -531,7 +531,7 @@ install() {
   cd "$dir"
 
   log fetch "$url"
-  $GET "$url" | tar -zx --strip-components=1
+  $GET "$url" | tar -Jx --strip-components=1
   [ "$QUIET" == false ] && erase_line
   rm -f "$dir/n.lock"
 
