@@ -431,7 +431,11 @@ tarball_url() {
 
   [ -n "$ARCH" ] && arch="$ARCH"
 
-  echo "${MIRROR[$DEFAULT]}v${version}/${BIN_NAME[$DEFAULT]}-v${version}-${os}-${arch}.tar.gz"
+  if [ -n "$N_USE_XZ" ]; then
+    echo "${MIRROR[$DEFAULT]}v${version}/${BIN_NAME[$DEFAULT]}-v${version}-${os}-${arch}.tar.xz"
+  else
+    echo "${MIRROR[$DEFAULT]}v${version}/${BIN_NAME[$DEFAULT]}-v${version}-${os}-${arch}.tar.gz"
+  fi
 
 }
 
@@ -566,7 +570,11 @@ install() {
   cd "$dir"
 
   log fetch "$url"
-  $GET "$url" | tar -zx --strip-components=1
+  if test -n "$N_USE_XZ"; then
+    $GET "$url" | tar -Jx --strip-components=1
+  else
+    $GET "$url" | tar -zx --strip-components=1
+  fi
   [ "$QUIET" == false ] && erase_line
   rm -f "$dir/n.lock"
 
