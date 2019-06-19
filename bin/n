@@ -561,7 +561,13 @@ install() {
   log installing "${BINS[$DEFAULT]}-v$version"
 
   local url="$(tarball_url "$version")"
-  is_ok "$url" || is_oss_ok "$url" || abort "invalid version '$version'"
+  local latest_url="$(tarball_url $(display_latest_version))"
+
+  if ! is_ok "$url" && is_ok "$latest_url"; then
+    abort "invalid extension '$EXTENSION' for version '$version'"
+  fi
+
+  is_ok "$latest_url" || is_oss_ok "$latest_url" || abort "invalid extension '$EXTENSION'"
 
   log mkdir "$dir"
   if ! mkdir -p "$dir"; then
