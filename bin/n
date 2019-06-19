@@ -563,10 +563,7 @@ install() {
   local url="$(tarball_url "$version")"
   local latest_url="$(tarball_url $(display_latest_version))"
 
-  if ! is_ok "$url" && is_ok "$latest_url"; then
-    abort "invalid extension '$EXTENSION' for version '$version'"
-  fi
-
+  ! is_ok "$url" && is_ok "$latest_url" && abort "invalid extension '$EXTENSION' for version '$version'"
   is_ok "$latest_url" || is_oss_ok "$latest_url" || abort "invalid extension '$EXTENSION'"
 
   log mkdir "$dir"
