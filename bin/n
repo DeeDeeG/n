@@ -561,7 +561,7 @@ install() {
   log installing "${BINS[$DEFAULT]}-v$version"
 
   local url="$(tarball_url "$version")"
-  is_ok "$url" || is_oss_ok "$url" || abort "invalid version '$version'"
+  is_ok "$url" || is_oss_ok "$url" || abort "invalid tarball extension '$EXTENSION' for version '$version'"
 
   log mkdir "$dir"
   if ! mkdir -p "$dir"; then
