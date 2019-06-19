@@ -406,6 +406,7 @@ tarball_url() {
   local uname="$(uname -a)"
   local arch=x86
   local os=
+  local ext="${EXTENSION-gz}"
 
   # from nave(1)
   case "$uname" in
@@ -431,7 +432,7 @@ tarball_url() {
 
   [ -n "$ARCH" ] && arch="$ARCH"
 
-  echo "${MIRROR[$DEFAULT]}v${version}/${BIN_NAME[$DEFAULT]}-v${version}-${os}-${arch}.tar.gz"
+  echo "${MIRROR[$DEFAULT]}v${version}/${BIN_NAME[$DEFAULT]}-v${version}-${os}-${arch}.tar.${ext}"
 
 }
 
@@ -541,6 +542,12 @@ install() {
 
   local dir="${VERSIONS_DIR[$DEFAULT]}/$version"
 
+  if [ "$EXTENSION" = "xz" ]; then
+    local tarflag="-Jx"
+  else
+    local tarflag="-zx"
+  fi
+
   if test -d "$dir"; then
     if [[ ! -e "$dir/n.lock" ]] ; then
       if "$ACTIVATE" ; then
@@ -566,7 +573,7 @@ install() {
   cd "$dir"
 
   log fetch "$url"
-  $GET "$url" | tar -zx --strip-components=1
+  $GET "$url" | tar "$tarflag" --strip-components=1
   [ "$QUIET" == false ] && erase_line
   rm -f "$dir/n.lock"
 
