@@ -526,18 +526,26 @@ install() {
   local version=${1#v}
 
   local dots="${version//[^.]/}"
-  if test ${#dots} -lt 2; then
-    version="$($GET 2> /dev/null "${MIRROR[DEFAULT]}" \
-      | grep -E "</a>" \
-      | grep -E -o '[0-9]+\.[0-9]+\.[0-9]+' \
-      | grep -E -v '^0\.[0-7]\.' \
-      | grep -E -v '^0\.8\.[0-5]$' \
-      | sort -u -k 1,1n -k 2,2n -k 3,3n -t . \
-      | grep -E "^$version" \
-      | tail -n1)"
 
-    test "$version" || abort "invalid version '${1#v}'"
-  fi
+  case ${#dots} in
+  [0-1])
+    local grep_arguments="-E ^$version\."
+    ;;
+  *)
+    local grep_arguments="-o $version"
+    ;;
+  esac
+
+  version="$($GET 2> /dev/null "${MIRROR[DEFAULT]}" \
+    | grep -E "</a>" \
+    | grep -E -o '[0-9]+\.[0-9]+\.[0-9]+' \
+    | grep -E -v '^0\.[0-7]\.' \
+    | grep -E -v '^0\.8\.[0-5]$' \
+    | sort -u -k 1,1n -k 2,2n -k 3,3n -t . \
+    | grep $grep_arguments \
+    | tail -n1)"
+
+  test "$version" || abort "invalid version '${1#v}'"
 
   local dir="${VERSIONS_DIR[$DEFAULT]}/$version"
 
