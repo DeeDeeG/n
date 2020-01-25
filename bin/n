@@ -1,3 +1,20 @@
+echo "N_USE_XZ is: $N_USE_XZ"
+if [ "$N_USE_XZ" = "0" ]; then
+  echo "(SET TO ZERO)"
+  echo "should use gz"
+elif [ -z "${N_USE_XZ+x}" ]; then
+  echo "(UNSET)"
+  echo "should use the default"
+elif [ -n "${N_USE_XZ}" ]; then
+  echo "(SET TO A NON_ZERO_LENGTH VALUE OTHER THAN 0)"
+  echo "should use xz"
+elif [ "${N_USE_XZ+defined}" = "defined" ]; then
+  echo "(SET TO NULL)"
+  echo "should use xz"
+else
+  echo "(UNSURE IF SET OR NOT??)"
+fi
+
 #!/usr/bin/env bash
 # shellcheck disable=SC2155
 # Disabled "Declare and assign separately to avoid masking return values": https://github.com/koalaman/shellcheck/wiki/SC2155
@@ -65,6 +82,8 @@ if [[ "${N_USE_XZ}" = "0" ]]; then
 elif [[ -n "${N_USE_XZ+defined}" ]]; then
   N_USE_XZ="true"
 fi
+
+echo "N_USE_XZ normalized to: $N_USE_XZ"
 # Not setting to readonly. Overriden by CLI flags, and update_xz_settings_for_version.
 
 N_MAX_REMOTE_MATCHES=${N_MAX_REMOTE_MATCHES:-20}
