@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- markdownlint-disable MD024 -->
 
+## [Unreleased] (date goes here)
+
+### Added
+
+- Downloads now default to using tarballs compressed by xz, rather than tarballs compressed by gzip. Includes system/feature detection, which is used to guess if xz can be decompressed by the current user. Enabled only for Node 4.x and greater, as this is the first major version for which xz tarballs were provided. ([#606] [#607])
+  - Export any value of `N_USE_XZ` (other than `0`), including setting it to be null or empty, to enable xz-compressed tarballs, overriding whatever the default behavior may be.
+  - (Unset `N_USE_XZ` entirely in order to return `n` to its default behavior.)
+
+### Changed
+
+- Exporting the environment variable `N_USE_XZ` as `0` will now have the effect of _disabling_ the use of tarballs compressed with xz, rather than enabling it. (Previously, exporting `N_USE_XZ` as any non-zero-length value, including the number `0`, would enable the use of xz-compressed tarballs.)
+
 ## [6.1.3] (2019-11-23)
 
 ### Added
@@ -235,6 +247,8 @@ Only minor functional changes, but technically could break scripts relying on sp
 [#588]: https://github.com/tj/n/issues/588
 [#590]: https://github.com/tj/n/issues/590
 [#593]: https://github.com/tj/n/issues/593
+[#606]: https://github.com/tj/n/issues/606
+[#607]: https://github.com/tj/n/issues/607
 
 <!-- reference links for releases -->
 

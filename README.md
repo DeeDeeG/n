@@ -194,9 +194,12 @@ To change the location to say `$HOME/.n`, add lines like the following to your s
     export N_PREFIX=$HOME/.n
     export PATH=$N_PREFIX/bin:$PATH
 
-By default `n` downloads archives from the mirror site which have been compressed with `gzip`. You can switch to using the `xz` compressed archives by defining `N_USE_XZ`.
+By default `n` opportunistically downloads archives from the mirror site which have been compressed with `xz`, when possible. (This requires that the archive is new enough to be available with xz compression (Node 4.x or greater), and requires that your system supports extracting xz-compressed archives with `tar`. Otherwise, `n` falls back to using `gzip`-compressed archives.) You can override the default behavior by defining `N_USE_XZ`, as follows:
 
-    export N_USE_XZ=true
+    export N_USE_XZ=0; // Disables the use of xz compressed archives
+    export N_USE_XZ=true; // Enables the use of xz compressed archives
+
+Any exported value of `N_USE_XZ` (including null or empty) other than `0` will tell `n` to prefer xz-compressed archives over gzip-compressed archives, and will explicitly override the default behavior. Note: Setting `N_USE_XZ` to `false` will (perhaps suprisingly) tell `n` to prefer the use of xz-compressed archives!
 
 In brief:
 
